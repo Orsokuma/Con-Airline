@@ -18,7 +18,7 @@ function index()
 
 // Get $id_token via HTTPS POST.
     $id_token  = $_POST['credential'];
-    $CLIENT_ID = 'YOURGOOGLECLIENTIDHERE';
+    $CLIENT_ID = getenv('GOOGLE_CLIENT_ID') ?? 'YOURGOOGLECLIENTIDHERE';
 
     $client  = new Google_Client(['client_id' => $CLIENT_ID]);  // Specify the CLIENT_ID of the app that accesses the backend
     $payload = $client->verifyIdToken($id_token);
