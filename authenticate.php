@@ -66,16 +66,7 @@ else
     session_regenerate_id();
     $_SESSION['loggedin'] = 1;
     $_SESSION['userid'] = $mem['userid'];
-    $IP = $db->escape($_SERVER['REMOTE_ADDR']);
-    if ($set['validate_period'] == "login" && $set['validate_on'])
-    {
-        $db->query(
-                "UPDATE `users`
-                 SET `verified` = 0
-                 WHERE `userid` = {$mem['userid']}");
-    }
-    $loggedin_url = 'https://' . determine_game_urlbase() . '';
+    $loggedin_url = 'https://' . determine_game_urlbase();
     header("Location: {$loggedin_url}");
     exit;
 }
-
