@@ -1,9 +1,21 @@
-<?php include "../pages/dbconnect.php";
+<?php
+include "../pages/dbconnect.php";
 
 
-$userid = isset($_GET['u']) ? $_GET['u'] : 0;    
-$orderby = isset($_GET['ord']) ? $_GET['ord'] : planeCOST;  
-$ads = isset($_GET['ads']) ? $_GET['ads'] : ASC;  
+$conf = [
+        'id' => 'PlaneID',
+        'planeUname' => 'Nickname',
+        'planeACTIVE' => 'Plane Active',
+        'planeSPEED' => 'Speed',
+        'planeMONEYMADE' => 'Money Made',
+        'planeDISTANCETRAVELLED' => 'Distance Travelled',
+];
+$_GET['u'] = array_key_exists('u', $_GET) && is_numeric($_GET['u']) && (int)$_GET['u'] > 0 ? (int)$_GET['u'] : 0;
+$_GET['ord'] = array_key_exists('ord', $_GET) && is_string($_GET['ord']) && array_key_exists(strtolower($_GET['ord']), $conf) ? strtoupper($_GET['ord']) : 'planeCOST';
+$_GET['ads'] = array_key_exists('ads', $_GET) && is_string($_GET['ads']) && in_array(strtolower($_GET['ads']), ['asc', 'desc']) ? strtoupper($_GET['ads']) : 'ASC';
+$userid = $_GET['u'];
+$orderby = $_GET['ord'];
+$ads = $_GET['ads'];
 $_GET['a'] = array_key_exists('a', $_GET) ? $_GET['a'] : null;
 switch ($_GET['a']) {
 case 'search': search(); break;
@@ -13,7 +25,7 @@ default:index(); break;
 
 
 function search() {
-    global $db,$ir,$c; 
+    global $db,$ir,$c;
     $userid = $_GET['u'];
 
     $_POST['airplanes'] = (isset($_POST['airplanes']) && is_string($_POST['airplanes'])) ? stripslashes($_POST['airplanes']) : '';
@@ -48,12 +60,12 @@ function search() {
                     Distance: <?php echo number_format($data['planeDISTANCE']); ?> KM<br />
                     Max Capacity: <?php echo number_format($data['planeWEIGHT']); ?> KG<br />
                     Fuel Rate: <?php echo number_format($data['planeCONSUMPTIONRATE']); ?> L/H</td>
-                <td><?php 
+                <td><?php
                     if ($data['premiumcost'] >= '1') {
-                        echo '<font color="#33879D"><b>✈'.number_format($data['premiumcost']).'</b></font>'; 
+                        echo '<font color="#33879D"><b>✈'.number_format($data['premiumcost']).'</b></font>';
                         $former = '<input type="hidden" name="premium" value="1">';
                     } else {
-                        echo '<font color="#379e00"><b>'.money_formatter($data['planeCOST']).'</b></font>'; 
+                        echo '<font color="#379e00"><b>'.money_formatter($data['planeCOST']).'</b></font>';
                         $former = '<input type="hidden" name="premium" value="0">';
                     } ?></td>
                 <td>
@@ -86,7 +98,7 @@ function index() {
 global $db,$userid,$orderby,$ads;
 
         $getinfo = $db->query("SELECT * FROM `airplanes` WHERE planeACTIVE='1' ORDER BY $orderby $ads");
-        
+
         $query = $db->query("SELECT * FROM users WHERE userid=$userid");
         $ir = $db->fetch_row($query);
         $hq = $ir['airlinehq'];
@@ -104,12 +116,12 @@ global $db,$userid,$orderby,$ads;
         if ($currentAircraftCount >= $maxAircraftCount) {
           die("NOTE: You need to upgrade your HQ to purchase more aircraft.");
         }
-        
-        
+
+
         $count = $db->num_rows($getinfo);
-        
+
         ?>
-        
+
         <ul class="nav bg-<?php echo $ir['theme']; ?> fixed-top">
             <body style="width: 100%; margin-top: 38px">
             <li class="nav-item">
@@ -159,14 +171,14 @@ global $db,$userid,$orderby,$ads;
             </li>
          </ul>
         <form action="?a=search&u=<?php echo $userid; ?>" method="POST">
-            
+
             <div class="input-group mb-3">
               <input type="text" name="airplanes" autocomplete="off" placeholder="Search for a Airplane Make" class="form-control">
               <button class="btn btn-success" value="Search" type="submit">Search</button>
             </div>
 
             </form>
-        
+
         <table border="0" class="table">
 
         <?php
@@ -183,20 +195,20 @@ global $db,$userid,$orderby,$ads;
                     Distance: <?php echo number_format($data['planeDISTANCE']); ?> KM<br />
                     Max Capacity: <?php echo number_format($data['planeWEIGHT']); ?> KG<br />
                     Fuel Rate: <?php echo number_format($data['planeCONSUMPTIONRATE']); ?> L/H</td>
-                <td><?php 
-                
+                <td><?php
+
                 if ($data['premiumcost'] >= '1') {
-                    echo '<font color="#33879D"><b>✈'.number_format($data['premiumcost']).'</b></font>'; 
+                    echo '<font color="#33879D"><b>✈'.number_format($data['premiumcost']).'</b></font>';
                     $former = '<input type="hidden" name="premium" value="1">';
                 } else {
-                    echo '<font color="#379e00"><b>'.money_formatter($data['planeCOST']).'</b></font>'; 
+                    echo '<font color="#379e00"><b>'.money_formatter($data['planeCOST']).'</b></font>';
                     $former = '<input type="hidden" name="premium" value="0">';
                 }
-                
-                
+
+
                 ?></td>
                 <td>
-                    
+
                     <?php
                     $user = $db->query("SELECT * FROM users WHERE userid=$userid");
                     $par = $db->fetch_row($user);
@@ -212,15 +224,15 @@ global $db,$userid,$orderby,$ads;
                         <input type="submit" name="" value="Purchase" class="btn btn-info">
                     </form>
                     <?php }?>
-                    
-                    
-                    
-                    
-                    
+
+
+
+
+
                     </td>
             </tr>
-            
-    <?php  }  ?>    
+
+    <?php  }  ?>
             <tr>
                 <td colspan="11"></td>
             </tr>
@@ -228,5 +240,5 @@ global $db,$userid,$orderby,$ads;
         </table>
 
       </div>
-<?php 
+<?php
 }
