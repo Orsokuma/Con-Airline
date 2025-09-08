@@ -60,5 +60,4 @@ if (isset($nohdr) == false || !$nohdr)
     {
         $h->userdata($ir, $fm, $cm);
     }
-    
 }
