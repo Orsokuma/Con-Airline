@@ -42,14 +42,18 @@ services:
       - db_data:/var/lib/mysql
       - ./db:/docker-entrypoint-initdb.d/db
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent" ]
+      test: [ "CMD-SHELL", "mysql --host=$$(cat $$MYSQL_HOST_FILE 2>&1) --user=$$(cat $$MYSQL_USERNAME_FILE 2>&1) --password=$$(cat $$MYSQL_ROOT_PASSWORD_FILE) 2>&1 -e 'SHOW DATABASES;'" ]
       interval: 10s
       timeout: 15s
       retries: 5
     environment:
+      MYSQL_HOST_FILE: /run/secrets/db_host
+      MYSQL_USERNAME_FILE: /run/secrets/db_user
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_pass
       MYSQL_DATABASE_FILE: /run/secrets/db_name
     secrets:
+      - db_host
+      - db_user
       - db_pass
       - db_name
 secrets:
