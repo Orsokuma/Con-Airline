@@ -124,17 +124,15 @@ function index() {
         $id = $data['id'];
         $gh = $db->query("SELECT * FROM activeflights WHERE planeID=$id");
         $active = $db->fetch_row($gh);
-        $currenttime = $active['flightEndTime'];
+        $currenttime = !empty($active) ? $active['flightEndTime'] : 0;
         $planeLat = $data['planeLOCATIONLAT'];
         $planeLng = $data['planeLOCATIONLON'];
 
         if($data['planeACTIVE'] == '0') {
             $style="success";
-            $arrival = ' <b>Location:</b> Parked at Terminal.';
             $arrivalnav = ' <b>Location:</b> Parked at Terminal.';
         } else {
             $style="danger";
-            $arrival = ' <b>Arrival:</b> '.date("jS F, Y, H:i",$currenttime+3660);
             $arrivalnav = " <b>Flight Time left:</b> <span id='countdown$id'></span>";
         }
         $perc=($data['planeFUELCURRENT']/$data['planeMAXFUEL']*100);
