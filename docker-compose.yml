@@ -5,8 +5,8 @@ services:
       args:
         - SSL_ENABLED=true
     ports:
-      - "9003:80"
-      - "9004:443"
+      - "9000:80"
+      - "9001:443"
     depends_on:
       db:
         condition: service_healthy
@@ -36,7 +36,7 @@ services:
   db:
     image: mysql:5.7
     ports:
-      - "33306:3306"
+      - "3306:3306"
     restart: unless-stopped
     volumes:
       - db_data:/var/lib/mysql
