@@ -1,0 +1,7 @@
+# Editors
+.idea
+.vscode
+
+# Docker
+docker/*
+!docker/SECRETS_FILES
