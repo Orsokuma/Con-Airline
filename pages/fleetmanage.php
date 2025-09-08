@@ -1,32 +1,33 @@
-<script src="https://unpkg.com/jquery@3.6.0/dist/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous" ></script>
-<script>
-    function getAirportNameICAOByLatLng(lat, lng) {
-        for (let item of parent.markers) {
-            if (Math.round(1000000000 * item.lat) / 1000000000 == Math.round(1000000000 * lat) / 1000000000 && Math.round(1000000000 * item.lng) / 1000000000 == Math.round(1000000000 * lng) / 1000000000) {
-                return [item.name, item.icao];
-            }
-        }
-        return ["HQ", ""];
-    }
-</script>
-
-
-<style>
-.no-drop { 
-    cursor: no-drop; 
-}
-.green {
-    color: #379e00;
-}
-</style>
-
-<?php include "../pages/dbconnect.php";
+<?php
+include "../pages/dbconnect.php";
 
 $skipcost = '1';
-    
-$userid = isset($_GET['u']) ? $_GET['u'] : 0;    
-$orderby = isset($_GET['ord']) ? $_GET['ord'] : id;  
-$ads = isset($_GET['ads']) ? $_GET['ads'] : ASC;  
+
+$userid = isset($_GET['u']) ? $_GET['u'] : 0;
+$orderby = isset($_GET['ord']) ? $_GET['ord'] : 'id';
+$ads = isset($_GET['ads']) ? $_GET['ads'] : 'ASC'; ?>
+    <script src="https://unpkg.com/jquery@3.6.0/dist/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous" ></script>
+    <script>
+      function getAirportNameICAOByLatLng(lat, lng) {
+        for (let item of parent.markers) {
+          if (Math.round(1000000000 * item.lat) / 1000000000 == Math.round(1000000000 * lat) / 1000000000 && Math.round(1000000000 * item.lng) / 1000000000 == Math.round(1000000000 * lng) / 1000000000) {
+            return [item.name, item.icao];
+          }
+        }
+        return ["HQ", ""];
+      }
+    </script>
+
+
+    <style>
+      .no-drop {
+        cursor: no-drop;
+      }
+      .green {
+        color: #379e00;
+      }
+    </style>
+<?php
 $_GET['a'] = array_key_exists('a', $_GET) ? $_GET['a'] : null;
 switch ($_GET['a']) {
     case 'renameaircraft': renameaircraft(); break;
