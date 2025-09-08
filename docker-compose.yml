@@ -1,0 +1,69 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        - SSL_ENABLED=true
+    ports:
+      - "9003:80"
+      - "9004:443"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      DB_HOST_FILE: /run/secrets/db_host
+      DB_USER_FILE: /run/secrets/db_user
+      DB_PASS_FILE: /run/secrets/db_pass
+      DB_NAME_FILE: /run/secrets/db_name
+      APP_KEY_FILE: /run/secrets/cron_code
+      TIME_ZONE_FILE: /run/secrets/time_zone
+    secrets:
+      - db_host
+      - db_user
+      - db_pass
+      - db_name
+      - cron_code
+      - time_zone
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /var/www/html
+          ignore:
+            - vendor/
+            - node_modules/
+  db:
+    image: mysql:5.7
+    ports:
+      - "33306:3306"
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d/db
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent" ]
+      interval: 10s
+      timeout: 15s
+      retries: 5
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_pass
+      MYSQL_DATABASE_FILE: /run/secrets/db_name
+    secrets:
+      - db_pass
+      - db_name
+secrets:
+  db_host:
+    file: docker/secrets/db_host.txt
+  db_user:
+    file: docker/secrets/db_user.txt
+  db_pass:
+    file: docker/secrets/db_pass.txt
+  db_name:
+    file: docker/secrets/db_name.txt
+  cron_code:
+    file: docker/secrets/cron_code.txt
+  time_zone:
+    file: docker/secrets/time_zone.txt
+volumes:
+  db_data:
