@@ -177,7 +177,6 @@ if (!empty($username))
         $e_encpsw = $db->escape($encpsw);
         $airlinename = $db->escape($_POST['airlinename']);
         $airlinecolour = $db->escape($_POST['airlinecolour']);
-        $i = $db->insert_id();
         $joineddate = time();
         $db->query("INSERT INTO `users`
                  (`userid`,`username`, `userpass`, `email`, `login_name`, `pass_salt`, `staff`, `level`, `bucks`, `airbucks`, `airlinename`, `airlinecolour`, `joineddate`) VALUES 
