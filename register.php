@@ -179,8 +179,8 @@ if (!empty($username))
         $airlinecolour = $db->escape($_POST['airlinecolour']);
         $joineddate = time();
         $db->query("INSERT INTO `users`
-                 (`userid`,`username`, `userpass`, `email`, `login_name`, `pass_salt`, `staff`, `level`, `bucks`, `airbucks`, `airlinename`, `airlinecolour`, `joineddate`) VALUES 
-                 ('','{$e_username}','{$e_encpsw}','{$e_email}','{$e_username}','{$e_salt}','0','1','15000000','0','{$airlinename}','{$airlinecolour}','{$joineddate}')");
+                 (`username`, `userpass`, `email`, `login_name`, `pass_salt`, `staff`, `level`, `bucks`, `airbucks`, `airlinename`, `airlinecolour`, `joineddate`) VALUES 
+                 ('{$e_username}','{$e_encpsw}','{$e_email}','{$e_username}','{$e_salt}','0','1','15000000','0','{$airlinename}','{$airlinecolour}','{$joineddate}')");
         echo "<br /><br /><br />You have signed up, enjoy the game.<br />
 		&gt; <a href='login.php'>Login</a>";
     }
